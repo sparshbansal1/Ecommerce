@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name} + ' – ShopEase'">Product Detail</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #3730A3;
+            --accent: #F59E0B;
+            --dark: #0F172A;
+            --surface: #F8FAFC;
+            --card-shadow: 0 4px 24px rgba(79,70,229,0.08);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--surface); color: var(--dark); }
+
+        /* ── NAVBAR ── */
+        .navbar { background: white; box-shadow: 0 1px 12px rgba(0,0,0,0.08); padding: 0.75rem 0; position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { font-size: 1.5rem; font-weight: 800; color: var(--primary) !important; letter-spacing: -0.5px; }
+        .navbar-brand span { color: var(--accent); }
+        .nav-link { font-weight: 500; color: #475569 !important; padding: 0.5rem 1rem !important; border-radius: 8px; transition: all 0.2s; }
+        .nav-link:hover { background: #EEF2FF; color: var(--primary) !important; }
+        .btn-login { background: var(--primary); color: white !important; border-radius: 8px; padding: 0.45rem 1.2rem !important; font-weight: 600; }
+        .btn-login:hover { background: var(--primary-dark); }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb-section { background: white; border-bottom: 1px solid #E2E8F0; padding: 1rem 0; }
+        .breadcrumb { margin: 0; font-size: 0.88rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb-item.active { color: #64748B; }
+
+        /* ── DETAIL ── */
+        .detail-wrap { background: white; border-radius: 20px; box-shadow: var(--card-shadow); overflow: hidden; }
+        .detail-img-col { background: #F1F5F9; display: flex; align-items: center; justify-content: center; padding: 2rem; min-height: 420px; }
+        .detail-img { width: 100%; height: 100%; max-height: 460px; object-fit: cover; border-radius: 14px; }
+        .detail-info { padding: 2.5rem; }
+        .detail-cat { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--primary); background: #EEF2FF; padding: 0.3rem 0.8rem; border-radius: 20px; margin-bottom: 1rem; }
+        .detail-name { font-size: 2rem; font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+        .detail-price { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 0.4rem; }
+        .detail-price small { font-size: 1rem; color: #94A3B8; font-weight: 500; }
+        .stock-pill { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 700; padding: 0.35rem 0.9rem; border-radius: 20px; margin-bottom: 1.5rem; }
+        .stock-pill.in { background: #DCFCE7; color: #16A34A; }
+        .stock-pill.low { background: #FEF9C3; color: #CA8A04; }
+        .stock-pill.out { background: #FEE2E2; color: #DC2626; }
+        .detail-desc { font-size: 0.95rem; color: #475569; line-height: 1.7; margin-bottom: 1.5rem; }
+        .detail-meta { background: #F8FAFC; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; }
+        .detail-meta > .row > div { padding: 0.4rem 0; }
+        .detail-meta .label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94A3B8; }
+        .detail-meta .value { font-size: 0.95rem; font-weight: 700; color: var(--dark); }
+        .btn-buy { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 0.75rem 2rem; font-weight: 700; font-size: 1rem; transition: background 0.2s, transform 0.15s; }
+        .btn-buy:hover { background: var(--primary-dark); transform: translateY(-1px); color: white; }
+        .btn-buy:disabled { background: #CBD5E1; cursor: not-allowed; transform: none; }
+        .btn-back { border-radius: 10px; padding: 0.75rem 1.5rem; font-weight: 600; }
+
+        /* ── RELATED PRODUCTS ── */
+        .section-title { font-size: 1.5rem; font-weight: 800; }
+        .section-title span { color: var(--primary); }
+        .product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); transition: transform 0.25s, box-shadow 0.25s; height: 100%; }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(79,70,229,0.15); }
+        .product-img-wrap { position: relative; overflow: hidden; height: 180px; background: #F1F5F9; }
+        .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+        .product-card:hover .product-img-wrap img { transform: scale(1.06); }
+        .product-body { padding: 1rem 1.1rem 1.1rem; }
+        .product-cat { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--primary); margin-bottom: 0.3rem; }
+        .product-name { font-size: 0.95rem; font-weight: 700; color: var(--dark); margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-price-sm { font-size: 1.1rem; font-weight: 800; color: var(--dark); }
+        .product-price-sm small { font-size: 0.72rem; font-weight: 500; color: #94A3B8; }
+        .product-name-link { text-decoration: none; }
+        .product-name-link:hover .product-name { color: var(--primary); }
+
+        /* ── FOOTER ── */
+        footer { background: var(--dark); color: #94A3B8; padding: 3rem 0 2rem; margin-top: 3rem; }
+        footer .brand { color: white; font-weight: 800; font-size: 1.2rem; }
+        footer a { color: #94A3B8; text-decoration: none; font-size: 0.9rem; }
+        footer a:hover { color: white; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">Shop<span>Ease</span></a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto ms-3 gap-1">
+                <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house me-1"></i>Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/?categoryId="><i class="bi bi-grid me-1"></i>Products</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-tag me-1"></i>Categories</a>
+                    <ul class="dropdown-menu border-0 shadow">
+                        <li><a class="dropdown-item" th:href="@{/}">All Products</a></li>
+                        <li th:each="cat : ${categories}">
+                            <a class="dropdown-item" th:href="@{/(categoryId=${cat.categoryId})}" th:text="${cat.name}">Category</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-2">
+                <a href="/cart" class="btn btn-outline-secondary btn-sm rounded-3">
+                    <i class="bi bi-bag me-1"></i>Cart
+                </a>
+                <a href="/login" class="nav-link btn-login">
+                    <i class="bi bi-person-circle me-1"></i>Login
+                </a>
+                <a href="/admin/products" class="btn btn-outline-primary btn-sm rounded-3">
+                    <i class="bi bi-shield-check me-1"></i>Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item" th:if="${product.category != null}">
+                    <a th:href="@{/(categoryId=${product.category.categoryId})}" th:text="${product.category.name}">Category</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${product.name}">Product</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- ═══════════ PRODUCT DETAIL ═══════════ -->
+<section class="container my-4 my-lg-5">
+    <div class="detail-wrap">
+        <div class="row g-0">
+            <!-- Image -->
+            <div class="col-lg-6">
+                <div class="detail-img-col">
+                    <img th:src="${product.imageUrl != null && !product.imageUrl.isEmpty()} ? ${product.imageUrl} : 'https://via.placeholder.com/600x500?text=No+Image'"
+                         th:alt="${product.name}"
+                         onerror="this.src='https://via.placeholder.com/600x500?text=No+Image'"
+                         class="detail-img">
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="col-lg-6">
+                <div class="detail-info">
+                    <span class="detail-cat" th:text="${product.category != null} ? ${product.category.name} : 'Uncategorized'">Category</span>
+                    <h1 class="detail-name" th:text="${product.name}">Product Name</h1>
+
+                    <div class="detail-price">
+                        <small>₹</small><span th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                    </div>
+
+                    <!-- Stock pill -->
+                    <span th:if="${product.stockQuantity > 5}" class="stock-pill in">
+                        <i class="bi bi-check-circle-fill"></i>In Stock
+                    </span>
+                    <span th:if="${product.stockQuantity > 0 && product.stockQuantity <= 5}" class="stock-pill low">
+                        <i class="bi bi-exclamation-triangle-fill"></i>Only <span th:text="${product.stockQuantity}"></span> left
+                    </span>
+                    <span th:if="${product.stockQuantity == 0}" class="stock-pill out">
+                        <i class="bi bi-x-circle-fill"></i>Out of Stock
+                    </span>
+
+                    <p class="detail-desc" th:text="${product.description}">Product description goes here.</p>
+
+                    <!-- Meta grid -->
+                    <div class="detail-meta">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="label">Product ID</div>
+                                <div class="value" th:text="'#' + ${product.productId}">#0</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="label">Category</div>
+                                <div class="value" th:text="${product.category != null} ? ${product.category.name} : 'None'">Category</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="label">Availability</div>
+                                <div class="value" th:text="${product.stockQuantity > 0} ? ${product.stockQuantity} + ' units' : 'Sold out'">0 units</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="label">Price</div>
+                                <div class="value" th:text="'₹' + ${#numbers.formatDecimal(product.price, 1, 'COMMA', 2, 'POINT')}">₹0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn-buy"
+                                th:disabled="${product.stockQuantity == 0}"
+                                th:text="${product.stockQuantity > 0} ? '🛒 Add to Cart' : 'Out of Stock'"
+                                onclick="addToCart(this)">
+                            Add to Cart
+                        </button>
+                        <a href="/" class="btn btn-light btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Shop</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ RELATED PRODUCTS ═══════════ -->
+    <div th:if="${relatedProducts != null && !relatedProducts.isEmpty()}" class="mt-5">
+        <h2 class="section-title mb-4">Related <span>Products</span></h2>
+        <div class="row row-cols-2 row-cols-md-4 g-4">
+            <div class="col" th:each="rel : ${relatedProducts}">
+                <div class="product-card">
+                    <a th:href="@{/product/{id}(id=${rel.productId})}">
+                        <div class="product-img-wrap">
+                            <img th:src="${rel.imageUrl != null && !rel.imageUrl.isEmpty()} ? ${rel.imageUrl} : 'https://via.placeholder.com/400x300?text=No+Image'"
+                                 th:alt="${rel.name}" loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                        </div>
+                    </a>
+                    <div class="product-body">
+                        <div class="product-cat" th:text="${rel.category != null} ? ${rel.category.name} : 'Uncategorized'"></div>
+                        <a th:href="@{/product/{id}(id=${rel.productId})}" class="product-name-link">
+                            <div class="product-name" th:text="${rel.name}">Product</div>
+                        </a>
+                        <div class="product-price-sm">
+                            <small>₹</small><span th:text="${#numbers.formatDecimal(rel.price, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="brand mb-2">ShopEase</div>
+                <p style="font-size:0.88rem;">Your one-stop destination for all things great. Quality products, fast delivery, happy shopping.</p>
+            </div>
+            <div class="col-md-2">
+                <strong class="text-white d-block mb-2">Shop</strong>
+                <div><a href="/">Home</a></div>
+                <div><a href="/?categoryId=">All Products</a></div>
+                <div><a href="/cart">Cart</a></div>
+            </div>
+            <div class="col-md-2">
+                <strong class="text-white d-block mb-2">Account</strong>
+                <div><a href="/login">Login</a></div>
+                <div><a href="/register">Register</a></div>
+            </div>
+            <div class="col-md-4">
+                <strong class="text-white d-block mb-2">Categories</strong>
+                <div th:each="cat : ${categories}">
+                    <a th:href="@{/(categoryId=${cat.categoryId})}" th:text="${cat.name}">Category</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border-color:#334155; margin-top:2rem;">
+        <div class="text-center" style="font-size:0.85rem;">
+            © 2024 ShopEase E-Commerce Platform. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function addToCart(btn) {
+        btn.textContent = '✓ Added!';
+        btn.style.background = '#10B981';
+        setTimeout(() => {
+            btn.textContent = '🛒 Add to Cart';
+            btn.style.background = '';
+        }, 1500);
+    }
+</script>
+</body>
+</html>
