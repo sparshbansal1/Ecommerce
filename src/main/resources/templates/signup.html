@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up – ShopEase</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root { --primary: #4F46E5; --primary-dark: #3730A3; --accent: #F59E0B; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 1.5rem;
+        }
+        .auth-card { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 440px; overflow: hidden; }
+        .auth-head { text-align: center; padding: 2rem 2rem 1rem; }
+        .auth-brand { font-size: 1.8rem; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+        .auth-brand span { color: var(--accent); }
+        .auth-sub { color: #64748B; font-size: 0.9rem; margin-top: 0.3rem; }
+        .auth-body { padding: 1rem 2rem 2rem; }
+        .form-label { font-weight: 600; font-size: 0.85rem; color: #374151; }
+        .form-control, .form-select { border-radius: 10px; border: 1.5px solid #E2E8F0; padding: 0.65rem 0.9rem; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        .btn-auth { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 0.75rem; font-weight: 700; width: 100%; transition: background 0.2s, transform 0.15s; }
+        .btn-auth:hover { background: var(--primary-dark); transform: translateY(-1px); color: white; }
+        .auth-foot { text-align: center; font-size: 0.9rem; color: #64748B; margin-top: 1.2rem; }
+        .auth-foot a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .role-hint { font-size: 0.78rem; color: #94A3B8; margin-top: 0.3rem; }
+    </style>
+</head>
+<body>
+<div class="auth-card">
+    <div class="auth-head">
+        <a href="/" class="auth-brand text-decoration-none">Shop<span>Ease</span></a>
+        <div class="auth-sub">Create your account to start shopping.</div>
+    </div>
+    <div class="auth-body">
+
+        <!-- Alerts -->
+        <div th:if="${errorMessage}" class="alert alert-danger py-2 small" role="alert">
+            <i class="bi bi-exclamation-circle-fill me-1"></i><span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Signup form -->
+        <form th:action="@{/signup}" method="post">
+            <div class="mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="role">Register as</label>
+                <select id="role" name="role" class="form-select" required>
+                    <option value="USER" selected>User (Customer)</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+                <div class="role-hint">Admins can manage products; users can shop and use the cart.</div>
+            </div>
+            <button type="submit" class="btn-auth"><i class="bi bi-person-plus me-1"></i>Create Account</button>
+        </form>
+
+        <div class="auth-foot">
+            Already have an account? <a href="/login">Log in</a>
+            <div class="mt-2"><a href="/" class="text-muted"><i class="bi bi-arrow-left me-1"></i>Back to shop</a></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

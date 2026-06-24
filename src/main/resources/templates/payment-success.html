@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful – ShopEase</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root { --primary: #4F46E5; --primary-dark: #3730A3; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F1F5F9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+        .result-card { background: white; border-radius: 20px; box-shadow: 0 12px 48px rgba(0,0,0,0.1); width: 100%; max-width: 460px; padding: 3rem 2.5rem; text-align: center; }
+        .check-circle { width: 90px; height: 90px; border-radius: 50%; background: #DCFCE7; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+        .check-circle i { font-size: 3rem; color: #16A34A; }
+        .result-card h2 { font-weight: 800; color: #16A34A; }
+        .result-sub { color: #64748B; font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .receipt { background: #F8FAFC; border-radius: 12px; padding: 1.2rem; text-align: left; margin-bottom: 1.5rem; }
+        .receipt .row-line { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 0.35rem 0; }
+        .receipt .label { color: #94A3B8; }
+        .receipt .value { font-weight: 700; color: #0F172A; word-break: break-all; }
+        .btn-primary { background: var(--primary); border: none; border-radius: 10px; padding: 0.75rem; font-weight: 700; width: 100%; }
+        .btn-primary:hover { background: var(--primary-dark); }
+    </style>
+</head>
+<body>
+<div class="result-card">
+    <div class="check-circle"><i class="bi bi-check-lg"></i></div>
+    <h2>Payment Successful!</h2>
+    <p class="result-sub">Thank you for your order. Your payment has been received.</p>
+
+    <div class="receipt">
+        <div class="row-line">
+            <span class="label">Amount Paid</span>
+            <span class="value" th:if="${amount}">₹<span th:text="${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+        </div>
+        <div class="row-line">
+            <span class="label">Payment ID</span>
+            <span class="value" th:text="${paymentId} ?: 'N/A'">pay_XXXX</span>
+        </div>
+        <div class="row-line">
+            <span class="label">Status</span>
+            <span class="value text-success">COMPLETED</span>
+        </div>
+    </div>
+
+    <a href="/" class="btn btn-primary"><i class="bi bi-house me-1"></i>Back to Shop</a>
+</div>
+</body>
+</html>

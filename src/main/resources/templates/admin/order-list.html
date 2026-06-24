@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management – Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root { --primary: #4F46E5; --primary-dark: #3730A3; --sidebar-w: 240px; }
+        body { background: #F1F5F9; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        .sidebar { width: var(--sidebar-w); min-height: 100vh; background: #0F172A; position: fixed; top: 0; left: 0; padding: 1.5rem 0; z-index: 100; }
+        .sidebar-brand { color: white; font-size: 1.3rem; font-weight: 800; padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #1E293B; display: block; text-decoration: none; }
+        .sidebar-brand span { color: #F59E0B; }
+        .sidebar-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #475569; padding: 1.2rem 1.5rem 0.4rem; }
+        .sidebar-link { display: flex; align-items: center; gap: 0.7rem; padding: 0.65rem 1.5rem; color: #94A3B8; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+        .sidebar-link:hover, .sidebar-link.active { background: #1E293B; color: white; }
+        .sidebar-link.active { border-left: 3px solid var(--primary); }
+        .sidebar-link i { font-size: 1rem; width: 20px; }
+
+        .main-content { margin-left: var(--sidebar-w); }
+        .topbar { background: white; border-bottom: 1px solid #E2E8F0; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+        .topbar h1 { font-size: 1.25rem; font-weight: 800; margin: 0; color: #0F172A; }
+        .content { padding: 2rem; }
+
+        .stat-card { background: white; border-radius: 14px; padding: 1.2rem 1.4rem; box-shadow: 0 2px 16px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1rem; text-decoration: none; transition: transform 0.15s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .stat-card .num { font-size: 1.5rem; font-weight: 800; color: #0F172A; }
+        .stat-card .lbl { font-size: 0.78rem; color: #64748B; }
+        .ic-pending { background: #FEF9C3; color: #CA8A04; }
+        .ic-shipped { background: #DBEAFE; color: #2563EB; }
+        .ic-delivered { background: #DCFCE7; color: #16A34A; }
+        .ic-cancelled { background: #FEE2E2; color: #DC2626; }
+
+        .table-card { background: white; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.05); overflow: hidden; }
+        .table-card .table { margin: 0; font-size: 0.88rem; }
+        .table th { background: #F8FAFC; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; padding: 0.9rem 1rem; border-bottom: 2px solid #EEF2F6; }
+        .table td { padding: 0.85rem 1rem; vertical-align: middle; border-bottom: 1px solid #F1F5F9; }
+        .table tbody tr:hover { background: #FAFAFA; }
+
+        .badge-status { padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.74rem; font-weight: 700; }
+        .st-PENDING { background: #FEF9C3; color: #CA8A04; }
+        .st-SHIPPED { background: #DBEAFE; color: #2563EB; }
+        .st-DELIVERED { background: #DCFCE7; color: #16A34A; }
+        .st-CANCELLED { background: #FEE2E2; color: #DC2626; }
+
+        .btn-view { width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; background: #EEF2FF; color: var(--primary); text-decoration: none; transition: all 0.2s; }
+        .btn-view:hover { background: var(--primary); color: white; }
+
+        .filter-pills .pill { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600; color: #64748B; background: white; border: 1.5px solid #E2E8F0; text-decoration: none; margin-right: 0.4rem; }
+        .filter-pills .pill.active, .filter-pills .pill:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .empty-state { text-align: center; padding: 4rem 1rem; color: #94A3B8; }
+        .empty-state i { font-size: 3.5rem; display: block; margin-bottom: 1rem; }
+
+        .alert-float { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; min-width: 300px; border-radius: 12px; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<!-- FLOATING ALERTS -->
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible alert-float shadow" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i><span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible alert-float shadow" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i><span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+    <a class="sidebar-brand" href="/">Shop<span>Ease</span></a>
+    <div class="sidebar-label">Main</div>
+    <a class="sidebar-link" href="/"><i class="bi bi-house"></i>Home</a>
+    <div class="sidebar-label">Product Module</div>
+    <a class="sidebar-link" href="/admin/products"><i class="bi bi-box-seam"></i>Products</a>
+    <a class="sidebar-link" href="/admin/products/add"><i class="bi bi-plus-circle"></i>Add Product</a>
+    <div class="sidebar-label">Order Module</div>
+    <a class="sidebar-link active" href="/admin/orders"><i class="bi bi-receipt"></i>Orders</a>
+    <div class="sidebar-label">Account</div>
+    <a class="sidebar-link" href="/logout"><i class="bi bi-box-arrow-right"></i>Logout</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main-content">
+    <div class="topbar">
+        <h1><i class="bi bi-receipt me-2 text-primary"></i>Order Management</h1>
+        <a href="/admin/products" class="text-decoration-none small text-muted"><i class="bi bi-box-seam me-1"></i>Go to Products</a>
+    </div>
+
+    <div class="content">
+
+        <!-- STAT CARDS (also act as filters) -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <a href="/admin/orders?status=PENDING" class="stat-card">
+                    <div class="stat-icon ic-pending"><i class="bi bi-hourglass-split"></i></div>
+                    <div><div class="num" th:text="${pendingCount}">0</div><div class="lbl">Pending</div></div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="/admin/orders?status=SHIPPED" class="stat-card">
+                    <div class="stat-icon ic-shipped"><i class="bi bi-truck"></i></div>
+                    <div><div class="num" th:text="${shippedCount}">0</div><div class="lbl">Shipped</div></div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="/admin/orders?status=DELIVERED" class="stat-card">
+                    <div class="stat-icon ic-delivered"><i class="bi bi-check2-circle"></i></div>
+                    <div><div class="num" th:text="${deliveredCount}">0</div><div class="lbl">Delivered</div></div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="/admin/orders?status=CANCELLED" class="stat-card">
+                    <div class="stat-icon ic-cancelled"><i class="bi bi-x-circle"></i></div>
+                    <div><div class="num" th:text="${cancelledCount}">0</div><div class="lbl">Cancelled</div></div>
+                </a>
+            </div>
+        </div>
+
+        <!-- FILTER PILLS -->
+        <div class="filter-pills mb-3">
+            <a href="/admin/orders" class="pill" th:classappend="${selectedStatus == null} ? 'active'">All</a>
+            <a href="/admin/orders?status=PENDING" class="pill" th:classappend="${selectedStatus == 'PENDING'} ? 'active'">Pending</a>
+            <a href="/admin/orders?status=SHIPPED" class="pill" th:classappend="${selectedStatus == 'SHIPPED'} ? 'active'">Shipped</a>
+            <a href="/admin/orders?status=DELIVERED" class="pill" th:classappend="${selectedStatus == 'DELIVERED'} ? 'active'">Delivered</a>
+            <a href="/admin/orders?status=CANCELLED" class="pill" th:classappend="${selectedStatus == 'CANCELLED'} ? 'active'">Cancelled</a>
+        </div>
+
+        <!-- ORDERS TABLE -->
+        <div class="table-card">
+            <div th:if="${orders.isEmpty()}" class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h5>No orders found</h5>
+                <p>Orders will appear here once customers complete checkout.</p>
+            </div>
+
+            <table th:unless="${orders.isEmpty()}" class="table align-middle">
+                <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td><span class="fw-bold text-primary" th:text="'#' + ${order.orderId}">#1</span></td>
+                    <td>
+                        <i class="bi bi-person-circle me-1 text-secondary"></i>
+                        <span th:text="${order.username}">user</span>
+                    </td>
+                    <td th:text="${order.itemCount} + ' item(s)'">0 items</td>
+                    <td class="fw-bold">₹<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">0.00</span></td>
+                    <td class="text-muted" th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy, HH:mm')}">date</td>
+                    <td><span class="badge-status" th:classappend="'st-' + ${order.status}" th:text="${order.status}">STATUS</span></td>
+                    <td class="text-end">
+                        <a th:href="@{/admin/orders/view/{id}(id=${order.orderId})}" class="btn-view" title="View &amp; manage">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    setTimeout(() => {
+        document.querySelectorAll('.alert-float').forEach(a => bootstrap.Alert.getOrCreateInstance(a).close());
+    }, 4000);
+</script>
+</body>
+</html>

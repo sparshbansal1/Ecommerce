@@ -4,6 +4,7 @@ import com.ecommerce.model.Category;
 import com.ecommerce.model.Product;
 import com.ecommerce.repository.CategoryRepository;
 import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,8 +20,15 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public void run(String... args) {
+        // Seed default accounts (idempotent – register() skips existing usernames)
+        userService.register("admin", "admin@shopease.com", "admin123", "ADMIN");
+        userService.register("user", "user@shopease.com", "user123", "USER");
+
         // Only seed if database is empty
         if (categoryRepository.count() == 0) {
 
