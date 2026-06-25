@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandBuzz - Home</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">
+        <span class="logo-icon">🔸</span> Brand<span>Buzz</span>
+    </div>
+    <nav class="nav-links">
+        <a th:href="@{/}" class="active">Home</a>
+        <a href="#">About us</a>
+        <a href="#">Services</a>
+        <a href="#">Contact us</a>
+        <a href="#">Blog</a>
+    </nav>
+
+    <div class="nav-auth" id="navAuthSection">
+        <a th:if="${session.userId == null}" th:href="@{/login}" class="btn-login">Login</a>
+        <a th:if="${session.userId == null}" th:href="@{/register}" class="btn-signup">Sign Up</a>
+
+        <a th:if="${session.userId != null and session.role == 'ADMIN'}" th:href="@{/admin/dashboard}" class="nav-profile-link">Admin Dashboard</a>
+        <a th:if="${session.userId != null}" th:href="@{/profile}" class="nav-profile-link">My Profile</a>
+        <a th:if="${session.userId != null}" th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</header>
+
+<main class="hero-container">
+    <div class="hero-content">
+        <h1>We create <span class="highlight">solutions</span> for your business</h1>
+        <p>Our team keeps a keen eye on emerging trends and technologies to ensure your marketing campaigns remain cutting-edge.</p>
+
+        <div class="cta-buttons">
+            <button class="btn-get-started" id="getStartedBtn">Get Started</button>
+        </div>
+
+        <div class="explore-more" id="exploreBtn">
+            <div class="arrow-icon">▼</div>
+            <span>Explore more</span>
+        </div>
+    </div>
+
+    <div class="hero-image-section">
+        <div class="image-wrapper">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=500&q=80" alt="Team working" class="main-illustration">
+            <div class="badge-ui">
+                <span class="badge-text">3/5</span>
+                <div class="progress-ring"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

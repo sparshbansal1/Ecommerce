@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandBuzz - Profile</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">
+        <span class="logo-icon">🔸</span> Brand<span>Buzz</span>
+    </div>
+    <nav class="nav-links">
+        <a th:href="@{/}">Home</a>
+        <a href="#" class="active">Profile</a>
+    </nav>
+    <div class="nav-auth">
+        <!-- No logout button here -->
+    </div>
+</header>
+
+<main class="profile-container">
+    <div class="profile-card">
+        <div class="avatar-section">
+            <div class="avatar-fallback" id="avatarLetter" th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</div>
+            <h2 id="profileTitle" th:text="${user.username}">Loading...</h2>
+            <p class="role-badge" id="roleBadge" th:text="${user.role}">CUSTOMER</p>
+        </div>
+
+        <form id="profileForm" th:action="@{/profile/update}" th:object="${user}" method="post">
+            <p th:if="${error}" th:text="${error}" style="color: #d32f2f; margin-bottom: 12px;"></p>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" th:field="*{username}" >
+            </div>
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" th:field="*{email}" readonly>
+            </div>
+
+            <div class="input-group">
+                <label>Address</label>
+                <input type="text" th:field="*{address}" placeholder="Enter your address">
+            </div>
+
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="text" th:field="*{mobile}" placeholder="Enter your mobile number">
+            </div>
+
+            <button type="submit" class="btn-submit">Update Profile</button>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

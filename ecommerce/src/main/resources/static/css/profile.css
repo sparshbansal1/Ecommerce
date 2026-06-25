@@ -1,0 +1,187 @@
+/* Global Reset and Typography */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Navbar Layout (Same as Home) */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+}
+.logo span { color: #f26522; }
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    margin: 0 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #f26522;
+}
+
+/* Navbar Logout Button */
+.btn-logout-nav {
+    background-color: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 9px 22px;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-logout-nav:hover {
+    background-color: #f5f5f5;
+    color: #222;
+    border-color: #bbb;
+}
+
+/* Profile Card Container */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+.profile-card {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+}
+
+/* Avatar Layout */
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.avatar-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.avatar-fallback {
+    width: 80px;
+    height: 80px;
+    background-color: #f26522;
+    color: white;
+    font-size: 32px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 15px rgba(242, 101, 34, 0.2);
+}
+
+.avatar-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+}
+
+.role-badge {
+    background-color: #fff3ed;
+    color: #f26522;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 15px;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Form Styling */
+.input-group {
+    text-align: left;
+    margin-bottom: 22px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #f26522;
+}
+
+.input-group input:disabled {
+    background-color: #f9f9f9;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #eee;
+}
+
+/* Action Submit Button matching Signup style */
+.btn-submit {
+    width: 100%;
+    background-color: #f26522;
+    color: white;
+    border: none;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(242, 101, 34, 0.3);
+    margin-top: 10px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-submit:hover {
+    background-color: #d64f16;
+    transform: translateY(-2px);
+}

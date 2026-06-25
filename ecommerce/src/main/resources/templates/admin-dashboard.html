@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandBuzz - Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f7f8fc;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            margin-left: 10px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .card {
+            margin-top: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="title">Admin Dashboard</h1>
+        <div class="actions">
+            <a th:href="@{/profile}">My Profile</a>
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+
+    <p>You are logged in as an admin user.</p>
+
+    <div class="card">
+        <h3>Quick Info</h3>
+        <p>Use this page for admin-specific controls and reports.</p>
+    </div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandBuzz - Login</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="form-container">
+    <div class="form-card">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Log in to your Brand<span class="highlight">Buzz</span> account</p>
+        <p th:if="${error}" th:text="${error}" style="color: #d32f2f; margin-bottom: 12px;"></p>
+
+        <form id="loginForm" th:action="@{/login}" method="post">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" required placeholder="Enter username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-submit">Log In</button>
+        </form>
+
+        <p class="footer-text">New to BrandBuzz? <a th:href="@{/register}">Create an account</a></p>
+    </div>
+</div>
+
+</body>
+</html>

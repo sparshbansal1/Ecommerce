@@ -1,0 +1,227 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+}
+.logo span {
+    color: #f26522;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    margin: 0 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #f26522;
+}
+
+.nav-auth {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-login, .btn-signup {
+    background-color: #f26522;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(242, 101, 34, 0.3);
+    transition: transform 0.2s, background-color 0.3s;
+    display: inline-block;
+}
+
+.btn-login:hover, .btn-signup:hover {
+    background-color: #d64f16;
+    transform: translateY(-2px);
+}
+
+.nav-profile-link {
+    text-decoration: none;
+    color: #f26522;
+    font-weight: 600;
+    font-size: 15px;
+    margin-right: 5px;
+    transition: color 0.3s ease;
+}
+
+.nav-profile-link:hover {
+    color: #d64f16;
+    text-decoration: underline;
+}
+
+.btn-logout {
+    background-color: #f26522;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(242, 101, 34, 0.3);
+    transition: transform 0.2s, background-color 0.3s;
+    display: inline-block;
+}
+
+.btn-logout:hover {
+    background-color: #d64f16;
+    transform: translateY(-2px);
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 8%;
+    min-height: 80vh;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 550px;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #222;
+    margin-bottom: 20px;
+}
+
+.hero-content .highlight {
+    color: #f26522;
+}
+
+.hero-content p {
+    color: #777;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+.btn-get-started {
+    background-color: #f26522;
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(242, 101, 34, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-get-started:hover {
+    background-color: #d64f16;
+    transform: translateY(-3px);
+}
+
+.explore-more {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    cursor: pointer;
+    color: #555;
+    font-weight: 500;
+    width: fit-content;
+}
+
+.arrow-icon {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 12px;
+    color: #f26522;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.explore-more:hover .arrow-icon {
+    transform: translateY(5px);
+}
+
+.hero-image-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.image-wrapper {
+    position: relative;
+    max-width: 100%;
+}
+
+.main-illustration {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 30px;
+}
+
+.badge-ui {
+    position: absolute;
+    bottom: 20%;
+    left: -30px;
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    font-weight: bold;
+    color: #333;
+}
+
+@media (max-width: 992px) {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 40px;
+    }
+    .hero-content {
+        margin-bottom: 50px;
+    }
+    .explore-more {
+        margin: 40px auto 0;
+    }
+    .nav-auth {
+        gap: 10px;
+    }
+}

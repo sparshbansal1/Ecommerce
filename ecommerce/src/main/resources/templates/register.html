@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandBuzz - Register</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="form-container">
+    <div class="form-card">
+        <h2>Create an Account</h2>
+        <p class="subtitle">Join Brand<span class="highlight">Buzz</span> today</p>
+        <p th:if="${error}" th:text="${error}" style="color: #d32f2f; margin-bottom: 12px;"></p>
+
+        <form id="registerForm" th:action="@{/register}" th:object="${user}" method="post">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" th:field="*{username}" required placeholder="Enter username">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" th:field="*{email}" required placeholder="name@example.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" th:field="*{password}" required placeholder="••••••••">
+            </div>
+            <div class="input-group">
+                <label>Role</label>
+                <select th:field="*{role}">
+                    <option value="CUSTOMER">Customer</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+
+        <p class="footer-text">Already have an account? <a th:href="@{/login}">Login here</a></p>
+    </div>
+</div>
+
+</body>
+</html>
