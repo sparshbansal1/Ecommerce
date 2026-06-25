@@ -95,6 +95,8 @@
             <ul class="navbar-nav me-auto ms-3 gap-1">
                 <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house me-1"></i>Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/?categoryId="><i class="bi bi-grid me-1"></i>Products</a></li>
+                <li class="nav-item" th:if="${currentUser != null}"><a class="nav-link" href="/my-orders"><i class="bi bi-bag-check me-1"></i>My Orders</a></li>
+                <li class="nav-item" th:if="${currentUser != null}"><a class="nav-link" href="/profile"><i class="bi bi-person-gear me-1"></i>Profile</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-tag me-1"></i>Categories</a>
                     <ul class="dropdown-menu border-0 shadow">

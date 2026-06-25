@@ -49,6 +49,11 @@ public class OrderService {
         return orderRepository.findByStatusOrderByOrderDateDesc(status);
     }
 
+    /** A specific user's orders, newest first (customer "My Orders" page). */
+    public List<Order> getOrdersByUser(Integer userId) {
+        return orderRepository.findByUserIdOrderByOrderDateDesc(userId);
+    }
+
     /** One order by id. */
     public Optional<Order> getOrderById(Integer orderId) {
         return orderRepository.findById(orderId);

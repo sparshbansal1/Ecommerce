@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile – ShopEase</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root { --primary: #4F46E5; --primary-dark: #3730A3; --accent: #F59E0B; --surface: #F1F5F9; --dark: #0F172A; --card-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--surface); color: var(--dark); }
+
+        .navbar { background: white; box-shadow: 0 1px 12px rgba(0,0,0,0.08); padding: 0.75rem 0; position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { font-size: 1.5rem; font-weight: 800; color: var(--primary) !important; letter-spacing: -0.5px; }
+        .navbar-brand span { color: var(--accent); }
+        .nav-link { font-weight: 500; color: #475569 !important; padding: 0.5rem 1rem !important; border-radius: 8px; transition: all 0.2s; }
+        .nav-link:hover, .nav-link.active { background: #EEF2FF; color: var(--primary) !important; }
+        .btn-login { background: var(--primary); color: white !important; border-radius: 8px; padding: 0.45rem 1.2rem !important; font-weight: 600; }
+        .btn-login:hover { background: var(--primary-dark); }
+
+        .page-head { font-size: 1.8rem; font-weight: 800; }
+        .page-head span { color: var(--primary); }
+
+        .card-box { background: white; border-radius: 16px; box-shadow: var(--card-shadow); padding: 1.6rem; margin-bottom: 1.5rem; }
+        .card-box h6 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #94A3B8; font-weight: 700; margin-bottom: 1.1rem; }
+
+        /* Avatar / identity card */
+        .avatar { width: 96px; height: 96px; border-radius: 50%; background: linear-gradient(135deg, #4F46E5, #7C3AED); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; font-weight: 800; margin: 0 auto 1rem; box-shadow: 0 8px 24px rgba(79,70,229,0.3); }
+        .identity-name { font-weight: 800; font-size: 1.25rem; text-align: center; }
+        .identity-email { color: #94A3B8; font-size: 0.88rem; text-align: center; margin-bottom: 0.8rem; }
+        .role-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.85rem; border-radius: 20px; font-size: 0.78rem; font-weight: 700; }
+        .role-USER { background: #DBEAFE; color: #1D4ED8; }
+        .role-ADMIN { background: #FEF3C7; color: #B45309; }
+
+        .form-label { font-weight: 600; font-size: 0.85rem; color: #374151; }
+        .form-control { border-radius: 10px; border: 1.5px solid #E2E8F0; padding: 0.65rem 0.9rem; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        .input-locked { background: #F8FAFC; color: #94A3B8; }
+
+        .btn-save { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 0.7rem 1.4rem; font-weight: 700; transition: background 0.2s, transform 0.15s; }
+        .btn-save:hover { background: var(--primary-dark); color: white; transform: translateY(-1px); }
+
+        .info-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px dashed #EEF2F6; font-size: 0.9rem; }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .k { color: #64748B; }
+        .info-row .v { font-weight: 600; color: var(--dark); }
+
+        .pw-toggle { cursor: pointer; }
+
+        .alert-float { position: fixed; top: 80px; right: 20px; z-index: 2000; min-width: 280px; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+    </style>
+</head>
+<body>
+
+<!-- FLOATING ALERTS -->
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible alert-float shadow" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i><span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible alert-float shadow" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i><span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">Shop<span>Ease</span></a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto ms-3 gap-1">
+                <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house me-1"></i>Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/?categoryId="><i class="bi bi-grid me-1"></i>Products</a></li>
+                <li class="nav-item" th:if="${currentUser != null}"><a class="nav-link" href="/my-orders"><i class="bi bi-bag-check me-1"></i>My Orders</a></li>
+                <li class="nav-item" th:if="${currentUser != null}"><a class="nav-link active" href="/profile"><i class="bi bi-person-gear me-1"></i>Profile</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/cart" class="btn btn-outline-secondary btn-sm rounded-3 position-relative">
+                    <i class="bi bi-bag me-1"></i>Cart
+                    <span th:if="${cartCount != null && cartCount > 0}"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          th:text="${cartCount}">0</span>
+                </a>
+                <a th:if="${currentUser == null}" href="/login" class="nav-link btn-login">
+                    <i class="bi bi-person-circle me-1"></i>Login
+                </a>
+                <a th:if="${currentUser != null and currentUser.role == 'ADMIN'}"
+                   href="/admin/products" class="btn btn-outline-primary btn-sm rounded-3">
+                    <i class="bi bi-shield-check me-1"></i>Admin
+                </a>
+                <span th:if="${currentUser != null}" class="fw-semibold text-secondary small d-none d-lg-inline">
+                    <i class="bi bi-person-check-fill me-1"></i><span th:text="${currentUser.username}">user</span>
+                </span>
+                <a th:if="${currentUser != null}" href="/logout" class="btn btn-outline-danger btn-sm rounded-3">
+                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- PROFILE -->
+<section class="container my-4 my-lg-5" style="max-width: 1000px;">
+
+    <h1 class="page-head mb-4"><i class="bi bi-person-gear me-2"></i>My <span>Profile</span></h1>
+
+    <div class="row g-4">
+
+        <!-- LEFT: identity card -->
+        <div class="col-lg-4">
+            <div class="card-box text-center">
+                <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(user.username,0,1))}">U</div>
+                <div class="identity-name" th:text="${user.username}">username</div>
+                <div class="identity-email" th:text="${user.email != null and !user.email.isEmpty()} ? ${user.email} : 'No email added'">email</div>
+                <span class="role-badge" th:classappend="'role-' + ${user.role}">
+                    <i class="bi" th:classappend="${user.role == 'ADMIN'} ? 'bi-shield-check' : 'bi-person'"></i>
+                    <span th:text="${user.role}">USER</span>
+                </span>
+            </div>
+
+            <div class="card-box">
+                <h6><i class="bi bi-info-circle me-1"></i>Account Info</h6>
+                <div class="info-row"><span class="k">User ID</span><span class="v" th:text="${user.userId}">0</span></div>
+                <div class="info-row"><span class="k">Username</span><span class="v" th:text="${user.username}">user</span></div>
+                <div class="info-row"><span class="k">Role</span><span class="v" th:text="${user.role}">USER</span></div>
+            </div>
+        </div>
+
+        <!-- RIGHT: edit forms -->
+        <div class="col-lg-8">
+
+            <!-- Edit details -->
+            <div class="card-box">
+                <h6><i class="bi bi-pencil-square me-1"></i>Edit Details</h6>
+                <form th:action="@{/profile/update}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label" for="username">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+                            <input type="text" id="username" name="username" class="form-control"
+                                   th:value="${user.username}" required maxlength="50">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                            <input type="email" id="email" name="email" class="form-control"
+                                   th:value="${user.email}" placeholder="you@example.com" maxlength="100">
+                        </div>
+                        <div class="form-text">Used for order updates. Leave blank if you prefer not to share.</div>
+                    </div>
+                    <button type="submit" class="btn-save"><i class="bi bi-save me-1"></i>Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Change password -->
+            <div class="card-box">
+                <h6><i class="bi bi-shield-lock me-1"></i>Change Password</h6>
+                <form th:action="@{/profile/change-password}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label" for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" name="newPassword" class="form-control" required minlength="4">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required minlength="4">
+                        </div>
+                    </div>
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="showPw" onclick="togglePw()">
+                        <label class="form-check-label small" for="showPw">Show passwords</label>
+                    </div>
+                    <button type="submit" class="btn-save mt-3"><i class="bi bi-key me-1"></i>Update Password</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function togglePw() {
+        const type = document.getElementById('showPw').checked ? 'text' : 'password';
+        ['currentPassword', 'newPassword', 'confirmPassword'].forEach(id => {
+            document.getElementById(id).type = type;
+        });
+    }
+    setTimeout(() => {
+        document.querySelectorAll('.alert-float').forEach(a => bootstrap.Alert.getOrCreateInstance(a).close());
+    }, 3500);
+</script>
+</body>
+</html>

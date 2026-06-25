@@ -48,6 +48,50 @@ public class UserService {
                 .filter(user -> user.getPassword().equals(hash(password)));
     }
 
+    /** Get a fresh copy of a user by id (used to reload profile data). */
+    public Optional<User> findById(Integer userId) {
+        return userRepository.findById(userId);
+    }
+
+    /**
+     * Update a user's profile details (username + email). The username must
+     * stay unique across accounts.
+     *
+     * @return the saved User, or empty if the username is already taken by
+     *         a different account.
+     */
+    public Optional<User> updateProfile(Integer userId, String username, String email) {
+        Optional<User> sameName = userRepository.findByUsername(username);
+        if (sameName.isPresent() && !sameName.get().getUserId().equals(userId)) {
+            return Optional.empty(); // username belongs to someone else
+        }
+        return userRepository.findById(userId).map(user -> {
+            user.setUsername(username);
+            user.setEmail(email);
+            return userRepository.save(user);
+        });
+    }
+
+    /**
+     * Change a user's password after verifying the current one.
+     *
+     * @return true if changed; false if the current password is wrong
+     *         (or the user no longer exists).
+     */
+    public boolean changePassword(Integer userId, String currentPassword, String newPassword) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return false;
+        }
+        User user = userOpt.get();
+        if (!user.getPassword().equals(hash(currentPassword))) {
+            return false; // current password does not match
+        }
+        user.setPassword(hash(newPassword));
+        userRepository.save(user);
+        return true;
+    }
+
     // Turn a plain password into a hashed hex string
     private String hash(String password) {
         try {
