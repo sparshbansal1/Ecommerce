@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add to Cart</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🛒 ShopEasy</h1>
+            <span class="header-subtitle">E-Commerce Platform</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <div class="form-container">
+            <h2>Add Product to Cart</h2>
+            <p class="form-subtitle">Fill in the product details to add it to your cart.</p>
+
+            <form th:action="@{/cart/add}" th:object="${cart}" method="post">
+
+                <!-- Hidden field for userId -->
+                <input type="hidden" th:field="*{userId}" />
+
+                <div class="form-group">
+                    <label for="productId">Product ID</label>
+                    <input type="number" id="productId" th:field="*{productId}"
+                           class="form-control" placeholder="Enter product ID" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" th:field="*{productName}"
+                           class="form-control" placeholder="e.g. Apple iPhone 15" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (₹)</label>
+                    <input type="number" id="price" th:field="*{price}"
+                           class="form-control" placeholder="e.g. 1499.99"
+                           step="0.01" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" th:field="*{quantity}"
+                           class="form-control" placeholder="e.g. 2"
+                           min="1" required />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Add to Cart 🛒</button>
+                    <a th:href="@{/cart/{userId}(userId=${userId})}" class="btn btn-secondary">Back to Cart</a>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>E-Commerce Platform &copy; 2025 | Module 3.2 - Shopping Cart</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
