@@ -23,10 +23,12 @@ public class UserService {
     private UserRepository userRepository;
 
     /**
-     * Create a new account.
+     * Create a new account. Public sign-ups are ALWAYS regular customers –
+     * an ADMIN account can never be created through registration.
+     *
      * @return true if created, false if the username is already taken.
      */
-    public boolean register(String username, String email, String password, String role) {
+    public boolean register(String username, String email, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
             return false;
         }
@@ -34,9 +36,24 @@ public class UserService {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(hash(password));
-        user.setRole(role);
+        user.setRole("USER");
         userRepository.save(user);
         return true;
+    }
+
+    /**
+     * Make sure the single ADMIN account exists with the exact credentials
+     * configured at startup. Creates it if missing, otherwise resets its
+     * password and role. This guarantees the admin login is always the known
+     * credential and that any old default (e.g. "admin123") stops working.
+     */
+    public void ensureAdminAccount(String username, String email, String rawPassword) {
+        User admin = userRepository.findByUsername(username).orElseGet(User::new);
+        admin.setUsername(username);
+        admin.setEmail(email);
+        admin.setPassword(hash(rawPassword));
+        admin.setRole("ADMIN");
+        userRepository.save(admin);
     }
 
     /**

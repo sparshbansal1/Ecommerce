@@ -25,9 +25,17 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Seed default accounts (idempotent – register() skips existing usernames)
-        userService.register("admin", "admin@shopease.com", "admin123", "ADMIN");
-        userService.register("user", "user@shopease.com", "user123", "USER");
+        // ───────────────────────────────────────────────────────────────
+        //  THE ONLY ADMIN ACCOUNT
+        //  Created (or its password reset) on every startup, so these are
+        //  always the only admin credentials. Keep them private.
+        //
+        //      username : admin
+        //      password : Admin@2026!
+        //
+        //  No one can register or log in as admin any other way.
+        // ───────────────────────────────────────────────────────────────
+        userService.ensureAdminAccount("admin", "admin@shopease.com", "Admin@2026!");
 
         // Only seed if database is empty
         if (categoryRepository.count() == 0) {

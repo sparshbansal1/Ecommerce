@@ -50,19 +50,6 @@
             <i class="bi bi-check-circle-fill me-1"></i><span th:text="${successMessage}"></span>
         </div>
 
-        <!-- Demo accounts -->
-        <div class="demo-box">
-            <div class="mb-2"><i class="bi bi-info-circle me-1"></i>Demo accounts (click to fill):</div>
-            <div class="d-flex gap-2">
-                <button type="button" class="demo-btn" onclick="fill('admin','admin123')">
-                    <i class="bi bi-shield-check me-1"></i>Admin
-                </button>
-                <button type="button" class="demo-btn" onclick="fill('user','user123')">
-                    <i class="bi bi-person me-1"></i>User
-                </button>
-            </div>
-        </div>
-
         <!-- Login form -->
         <form th:action="@{/login}" method="post">
             <div class="mb-3">
@@ -82,12 +69,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    function fill(u, p) {
-        document.getElementById('username').value = u;
-        document.getElementById('password').value = p;
-    }
-</script>
 </body>
 </html>

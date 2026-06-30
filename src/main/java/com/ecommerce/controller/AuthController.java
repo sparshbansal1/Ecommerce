@@ -67,10 +67,11 @@ public class AuthController {
     public String signup(@RequestParam String username,
                          @RequestParam(required = false) String email,
                          @RequestParam String password,
-                         @RequestParam String role,
                          RedirectAttributes redirectAttributes) {
 
-        boolean created = userService.register(username, email, password, role);
+        // Role is intentionally NOT read from the form. Every public sign-up is
+        // a regular customer; admins can never self-register.
+        boolean created = userService.register(username, email, password);
 
         if (!created) {
             redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Username already taken. Try another.");
